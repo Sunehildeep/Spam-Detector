@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfTransformer
 import seaborn as sns
 from nltk.corpus import stopwords
+from sklearn.model_selection import cross_val_score
 
 #Load the data into pandas dataframe
 plt.style.use('seaborn-dark')
@@ -46,8 +47,9 @@ group3_shakira['CONTENT'] = group3_shakira['CONTENT'].apply(lambda x: ' '.join([
 
 
 '''Model Training''' #Man Kit Chan
+
 count_vectorizer = CountVectorizer()
-train_tc = count_vectorizer.fit_transform(group3_shakira)
+train_tc = count_vectorizer.fit_transform(group3_shakira["CONTENT"])
 print("\nDimensions of training data:", train_tc.shape)
 
 tfidf = TfidfTransformer()
@@ -58,16 +60,20 @@ type(train_tfidf)
 group3_shakira_shuffled = group3_shakira.sample(frac=1)
 
 # Compute number of rows for training
-# trow = round(len(group3_shakira_shuffled) * 0.75)
+trow = round(len(group3_shakira_shuffled) * 0.75)
 
-# df_train = group3_shakira_shuffled.iloc[:trow,:]
-# df_test = group3_shakira_shuffled.iloc[trow:,:]
+df_train = group3_shakira_shuffled.iloc[:trow,:]
+df_test = group3_shakira_shuffled.iloc[trow:,:]
 
-# x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
-# x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
+x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
+x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
 
-#classifier = MultinomialNB().fit(x_train, y_train)
+# train_tfidf_shuffled = train_tfidf.data[group3_shakira_shuffled.index]
 
+classifier = MultinomialNB().fit(train_tfidf, group3_shakira["CLASS"])
+
+# num_folds = 5
+# accuracy_values = cross_val_score(classifier, x_train, y_train, scoring='accuracy', cv=num_folds)
 
 
 '''Model Evaluation''' #Pak Wah Wong
