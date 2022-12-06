@@ -12,8 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfTransformer
 import seaborn as sns
+from nltk.corpus import stopwords
 
-'''Data Exploration''' #Rincy
 #Load the data into pandas dataframe
 plt.style.use('seaborn-dark')
 
@@ -34,14 +34,15 @@ group3_shakira.info()
 plt.figure(figsize = (16,8))
 sns.heatmap(group3_shakira.isnull(), cmap = 'viridis', cbar = False)
 
-'''Data Preprocessing''' #Sunehildeep
 #Removing comment_id, author and date columns
 group3_shakira.drop(['COMMENT_ID','AUTHOR','DATE'],axis=1,inplace=True)
 
 #Checking for null values
 group3_shakira.isnull().sum()
 
-'''Model Training''' #Man Kit Chan
+#Improving the data by removing stop words
+stop_words = stopwords.words('english')
+group3_shakira = group3_shakira['CONTENT'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
 
 count_vectorizer = CountVectorizer()
 train_tc = count_vectorizer.fit_transform(group3_shakira)
@@ -63,7 +64,6 @@ df_test = group3_shakira_shuffled.iloc[trow:,:]
 
 x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
 x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
-
 
 '''Model Evaluation''' #Pak Wah Wong
 
