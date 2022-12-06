@@ -42,7 +42,7 @@ group3_shakira.isnull().sum()
 
 #Improving the data by removing stop words
 stop_words = stopwords.words('english')
-group3_shakira = group3_shakira['CONTENT'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
+group3_shakira['CONTENT'] = group3_shakira['CONTENT'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
 
 
 '''Model Training''' #Man Kit Chan
