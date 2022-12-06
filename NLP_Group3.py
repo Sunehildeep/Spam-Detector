@@ -12,7 +12,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfTransformer
 import seaborn as sns
+<<<<<<< Updated upstream
 from nltk.corpus import stopwords
+=======
+from sklearn.naive_bayes import GaussianNB
+
+>>>>>>> Stashed changes
 
 #Load the data into pandas dataframe
 plt.style.use('seaborn-dark')
@@ -51,7 +56,6 @@ print("\nDimensions of training data:", train_tc.shape)
 tfidf = TfidfTransformer()
 train_tfidf = tfidf.fit_transform(train_tc)
 type(train_tfidf)
-print(train_tfidf)
 
 # Shuffle the dataset
 group3_shakira_shuffled = group3_shakira.sample(frac=1)
@@ -65,6 +69,12 @@ df_test = group3_shakira_shuffled.iloc[trow:,:]
 x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
 x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
 
+<<<<<<< Updated upstream
+=======
+classifier = MultinomialNB().fit(x_train, y_train)
+
+
+>>>>>>> Stashed changes
 '''Model Evaluation''' #Pak Wah Wong
 
 '''Prediction''' #Huyen Anh
