@@ -41,8 +41,29 @@ group3_shakira.drop(['COMMENT_ID','AUTHOR','DATE'],axis=1,inplace=True)
 #Checking for null values
 group3_shakira.isnull().sum()
 
-
 '''Model Training''' #Man Kit Chan
+
+count_vectorizer = CountVectorizer()
+train_tc = count_vectorizer.fit_transform(group3_shakira)
+print("\nDimensions of training data:", train_tc.shape)
+
+tfidf = TfidfTransformer()
+train_tfidf = tfidf.fit_transform(train_tc)
+type(train_tfidf)
+print(train_tfidf)
+
+# Shuffle the dataset
+group3_shakira_shuffled = group3_shakira.sample(frac=1)
+
+# Compute number of rows for training
+trow = round(len(group3_shakira_shuffled) * 0.75)
+
+df_train = group3_shakira_shuffled.iloc[:trow,:]
+df_test = group3_shakira_shuffled.iloc[trow:,:]
+
+x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
+x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
+
 
 '''Model Evaluation''' #Pak Wah Wong
 
