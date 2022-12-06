@@ -12,12 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfTransformer
 import seaborn as sns
-<<<<<<< Updated upstream
 from nltk.corpus import stopwords
-=======
-from sklearn.naive_bayes import GaussianNB
-
->>>>>>> Stashed changes
 
 #Load the data into pandas dataframe
 plt.style.use('seaborn-dark')
@@ -49,6 +44,8 @@ group3_shakira.isnull().sum()
 stop_words = stopwords.words('english')
 group3_shakira = group3_shakira['CONTENT'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
 
+
+'''Model Training''' #Man Kit Chan
 count_vectorizer = CountVectorizer()
 train_tc = count_vectorizer.fit_transform(group3_shakira)
 print("\nDimensions of training data:", train_tc.shape)
@@ -61,20 +58,18 @@ type(train_tfidf)
 group3_shakira_shuffled = group3_shakira.sample(frac=1)
 
 # Compute number of rows for training
-trow = round(len(group3_shakira_shuffled) * 0.75)
+# trow = round(len(group3_shakira_shuffled) * 0.75)
 
-df_train = group3_shakira_shuffled.iloc[:trow,:]
-df_test = group3_shakira_shuffled.iloc[trow:,:]
+# df_train = group3_shakira_shuffled.iloc[:trow,:]
+# df_test = group3_shakira_shuffled.iloc[trow:,:]
 
-x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
-x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
+# x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
+# x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
 
-<<<<<<< Updated upstream
-=======
-classifier = MultinomialNB().fit(x_train, y_train)
+#classifier = MultinomialNB().fit(x_train, y_train)
 
 
->>>>>>> Stashed changes
+
 '''Model Evaluation''' #Pak Wah Wong
 
 '''Prediction''' #Huyen Anh
