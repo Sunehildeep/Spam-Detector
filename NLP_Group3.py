@@ -41,20 +41,8 @@ group3_shakira.drop(['COMMENT_ID','AUTHOR','DATE'],axis=1,inplace=True)
 #Checking for null values
 group3_shakira.isnull().sum()
 
-#Improving the data by removing stop words
-stop_words = stopwords.words('english')
-group3_shakira['CONTENT'] = group3_shakira['CONTENT'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
-
-
-'''Model Training''' #Man Kit Chan
-
-count_vectorizer = CountVectorizer()
-train_tc = count_vectorizer.fit_transform(group3_shakira["CONTENT"])
-print("\nDimensions of training data:", train_tc.shape)
-
-tfidf = TfidfTransformer()
-train_tfidf = tfidf.fit_transform(train_tc)
-type(train_tfidf)
+#Printing the new shape of the dataframe
+print(group3_shakira.shape)
 
 # Shuffle the dataset
 group3_shakira_shuffled = group3_shakira.sample(frac=1)
@@ -62,20 +50,73 @@ group3_shakira_shuffled = group3_shakira.sample(frac=1)
 # Compute number of rows for training
 trow = round(len(group3_shakira_shuffled) * 0.75)
 
-df_train = group3_shakira_shuffled.iloc[:trow,:]
-df_test = group3_shakira_shuffled.iloc[trow:,:]
+# Split the dataset into training and testing
+training = group3_shakira_shuffled[:trow]
+testing = group3_shakira_shuffled[trow:]
 
-x_train, y_train = df_train.iloc[:,:-1], df_train.iloc[:,-1]
-x_test, y_test = df_test.iloc[:,:-1], df_test.iloc[:,-1]
+#Printing shape
+training.shape
+testing.shape
 
-# train_tfidf_shuffled = train_tfidf.data[group3_shakira_shuffled.index]
+training_X = training['CONTENT']
+training_Y = training['CLASS']
 
-classifier = MultinomialNB().fit(train_tfidf, group3_shakira["CLASS"])
+testing_X = testing['CONTENT']
+testing_Y = testing['CLASS']
 
-# num_folds = 5
-# accuracy_values = cross_val_score(classifier, x_train, y_train, scoring='accuracy', cv=num_folds)
+#Printing shape
+training_X.shape
+training_Y.shape
+testing_X.shape
+testing_Y.shape
 
+cv = CountVectorizer(stop_words=stopwords.words('english'))
+features_train = cv.fit_transform(training_X)
 
-'''Model Evaluation''' #Pak Wah Wong
+tfidf = TfidfTransformer()
+features_train_tfidf = tfidf.fit_transform(features_train)
+features_test = cv.transform(testing_X)
+features_test_tfidf = tfidf.transform(features_test)
 
-'''Prediction''' #Huyen Anh
+type(features_train_tfidf)
+
+classifier = MultinomialNB(alpha=0.40, fit_prior=False, class_prior=None)
+classifier.fit(features_train_tfidf, training_Y)
+
+#Cross Validation with 5 folds
+scores = cross_val_score(classifier, features_train_tfidf, training_Y, cv=5)
+print("Cross Validation Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+
+#Testing the model
+y_pred = classifier.predict(features_test_tfidf)
+
+#Printing the accuracy score
+print("Accuracy Score: ", accuracy_score(testing_Y, y_pred))
+
+#Printing the confusion matrix
+print("Confusion Matrix: ", confusion_matrix(testing_Y, y_pred))
+
+input_data = [
+    'That song is AWESOME',
+    'Best World Cup song ever!!',
+    'Love the song',
+    'even 12 years goes on, this song never dissapointed us.',
+    'THE GIRLS:18+ Youtube: It is fine Someone: Says "heck" Youtube: be gone',
+    'CLICK https://123.com/ W3lc0m3 to our website!'
+]
+
+target_data = [0, 0, 0, 0, 1, 1]
+
+input_data_features = cv.transform(input_data)
+input_data_tfidf = tfidf.transform(input_data_features)
+
+predictions = classifier.predict(input_data_tfidf)
+
+for i in range(len(input_data)):
+    print(input_data[i], '->', predictions[i])
+
+#Printing the classification report
+print("Classification Report: ", classification_report(target_data, predictions))
+
+#Printing the accuracy score
+print("Accuracy Score: ", accuracy_score(target_data, predictions))
