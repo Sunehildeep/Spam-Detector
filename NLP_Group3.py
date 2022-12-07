@@ -15,25 +15,16 @@ import seaborn as sns
 from nltk.corpus import stopwords
 from sklearn.model_selection import cross_val_score
 
-#Load the data into pandas dataframe
-plt.style.use('seaborn-dark')
 
 #Loading the CSV file
 group3_shakira = pd.read_csv('./youtube05-Shakira.csv')
 
 #Initial exploration of the dataframe
-pd.set_option('display.max_columns', None)
-
 group3_shakira.head()
 
 group3_shakira.tail()
 
 group3_shakira.info()
-
-# Using a heatmaps to better visualize the integrity of the dataframe.
-# The information provided by posts.info() is visualy confirmed. There are no missing data in this dataframe.
-plt.figure(figsize = (16,8))
-sns.heatmap(group3_shakira.isnull(), cmap = 'viridis', cbar = False)
 
 #Removing comment_id, author and date columns
 group3_shakira.drop(['COMMENT_ID','AUTHOR','DATE'],axis=1,inplace=True)
@@ -65,7 +56,6 @@ print("\nDimensions of training data:", train_tc.shape)
 tfidf = TfidfTransformer()
 train_tfidf = tfidf.fit_transform(train_tc)
 type(train_tfidf)
-
 
 # Train a Multinomial Naive Bayes classifier
 classifier = MultinomialNB().fit(train_tfidf, y_train)
@@ -115,7 +105,7 @@ print (confusion_matrix)
 accuracy_test = 100.0 * (y_test == predictions_test).sum() / y_test.shape[0]
 print("Accuracy with testing data: ", round(accuracy_test, 2), "%")
 
-
+#Prediction
 input_data = [
     'That song is AWESOME',
     'Best World Cup song ever!!',
@@ -143,4 +133,3 @@ for sent, category in zip(input_data, predictions):
 #Print the accuracy of the model
 accuracy = 100.0 * (target_data == predictions).sum() / len(target_data)
 print("Accuracy with prediction data: ", round(accuracy, 2), "%")
-
