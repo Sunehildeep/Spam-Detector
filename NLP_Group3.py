@@ -9,15 +9,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfTransformer
-import seaborn as sns
 from nltk.corpus import stopwords
 from sklearn.model_selection import cross_val_score
 
-
 #Loading the CSV file
-group3_shakira = pd.read_csv('./youtube05-Shakira.csv')
+group3_shakira = pd.read_csv('D:\Study\Semester 3\AI - Python\Group 3\youtube05-Shakira.csv')
 
 #Initial exploration of the dataframe
 group3_shakira.head()
